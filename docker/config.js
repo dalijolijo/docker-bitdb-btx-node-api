@@ -1,10 +1,10 @@
 module.exports = {
   "rpc": {
     "protocol": "http",
-    "user": "bitcoin",
+    "user": "bitcore",
     "pass": "[]",
-    "host": "bitcoin-abc",
-    "port": "8332",
+    "host": "bitcored",
+    "port": "8556",
     "limit": 15
   },
   "db": {
@@ -38,11 +38,11 @@ module.exports = {
   "zmq": {
     "incoming": {
       "host": process.env.host ? process.env.host : "127.0.0.1",
-      "port": "28332"
+      "port": "28556"
     },
     "outgoing": {
       "host": process.env.host ? process.env.host : "127.0.0.1",
-      "port": "28339"
+      "port": "28555"
     }
   }
 }

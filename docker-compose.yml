@@ -1,4 +1,5 @@
 version: '3'
+
 services:
   mongo:
     image: mongo
@@ -8,26 +9,23 @@ services:
       - bitdb
     volumes:
        - ./mongo:/data/db
-  bitcoin-abc:
-    build:
-      context: "./docker"
-      dockerfile: "./Dockerfile.bitcoin-abc"
-    image: bitcoin-abc
-    container_name: bitcoin-abc
-    command: bitcoind
+  bitcored:
+    image: dalijolijo/bitcored-bitdb
+    container_name: bitcored-bitdb
+    command: -rpcuser=root -rpcpassword=bitcore
     networks:
       - bitdb
     restart: always
     ports:
-      - 8333:8333
+      - "8555:8555"
     volumes:
-       - ./bitcoin:/root/.bitcoin
-  bitdb:
+       - ./bitcore:/data 
+  bitdb-btx:
     build:
       context: "./docker"
-      dockerfile: "./Dockerfile.bitdb"
-    image: bitdb
-    container_name: bitdb
+      dockerfile: "./Dockerfile.bitdb-btx"
+    image: docker-bitd-btx
+    container_name: bitdb-btx
     working_dir: "/bitdb"
     command: bash -c "sleep 60 && npm start"
     restart: always
@@ -35,12 +33,12 @@ services:
       - bitdb
     depends_on:
       - mongo
-      - bitcoin-abc
+      - bitcored
   bitserve:
     build:
       context: "./docker"
       dockerfile: "./Dockerfile.bitserve"
-    image: bitserve
+    image: docker-bitserve
     container_name: bitserve
     working_dir: "/bitserve"
     command: bash -c "sleep 10 && npm start"
