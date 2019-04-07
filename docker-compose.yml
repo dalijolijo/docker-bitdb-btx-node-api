@@ -38,7 +38,7 @@ services:
     build:
       context: "./docker"
       dockerfile: "./Dockerfile.bitserve"
-    image: docker-bitserve
+    image: bitserve
     container_name: bitserve
     working_dir: "/bitserve"
     command: bash -c "sleep 10 && npm start"
