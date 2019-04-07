@@ -1,8 +1,8 @@
 module.exports = {
   "rpc": {
     "protocol": "http",
-    "user": "bitcore",
-    "pass": "[]",
+    "user": "root",
+    "pass": "bitcore",
     "host": "bitcored",
     "port": "8556",
     "limit": 15
