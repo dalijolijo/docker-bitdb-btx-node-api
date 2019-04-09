@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+  
   mongo:
     image: mongo
     container_name: mongo
@@ -9,21 +10,23 @@ services:
       - bitdb
     volumes:
       - ./mongo:/data/db
+  
   bitcored:
     image: dalijolijo/bitcored-bitdb
     container_name: bitcored-bitdb
     command: -rpcuser=root -rpcpassword=bitcore
+    restart: always
     networks:
       - bitdb
-    restart: always
     ports:
-      - "8555:8555"
+      - 8555:8555
     volumes:
       - ./bitcore:/data 
+  
   bitdb-btx:
     build:
-      context: "./docker"
-      dockerfile: "./Dockerfile.bitdb-btx"
+      context: ./docker
+      dockerfile: ./Dockerfile.bitdb-btx
     image: bitd-btx
     container_name: bitdb-btx
     working_dir: "/bitdb"
@@ -34,10 +37,12 @@ services:
     depends_on:
       - mongo
       - bitcored
+  
+  # BitDB Explorer : http://localhost:3001/
   bitserve:
     build:
-      context: "./docker"
-      dockerfile: "./Dockerfile.bitserve"
+      context: ./docker
+      dockerfile: ./Dockerfile.bitserve
     image: bitserve
     container_name: bitserve
     working_dir: "/bitserve"
@@ -48,7 +53,24 @@ services:
     depends_on:
       - mongo
     ports:
+      - 3001:3001
+  
+  # Grafana : http://localhost:3000/
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: always
+    networks:
+      - bitdb
+    ports:
       - 3000:3000
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-worldmap-panel
+
+volumes:
+  grafana-storage:
 
 networks:
   bitdb:
