@@ -2,15 +2,41 @@ version: '3'
 
 services:
   
+#  mongo:
+#    image: mongo
+#    container_name: mongo
+#    restart: always
+#    networks:
+#      - bitdb
+#    volumes:
+#      - ./mongo:/data/db
+ 
   mongo:
-    image: mongo
+    image: mongo:latest
     container_name: mongo
+    command: mongod --smallfiles
     restart: always
+    environment:
+      -  "MONGODB_USER=bitcore"
+      -  "MONGODB_PASS=bitcore"
     networks:
       - bitdb
     volumes:
       - ./mongo:/data/db
-  
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    networks:
+      - bitdb
+    ports:
+      - 8081:8081
+    environment:
+      - "ME_CONFIG_OPTIONS_EDITORTHEME=ambiance"
+      - "ME_CONFIG_BASICAUTH_USERNAME=bitcore"
+      - "ME_CONFIG_BASICAUTH_PASSWORD=bitcore"
+ 
   bitcored:
     image: dalijolijo/bitcored-bitdb
     container_name: bitcored-bitdb
@@ -57,7 +83,7 @@ services:
   
   # Grafana : http://localhost:3000/
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:latest
     container_name: grafana
     restart: always
     networks:
